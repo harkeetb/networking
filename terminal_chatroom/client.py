@@ -22,4 +22,25 @@ def sendMessage():
 #function receiveMessage
 #purpose: receive an incoming message via server
 def receiveMessage():
-    pass
+    connected = True
+
+    while connected:
+        try:
+            #receive an incoming message from server
+            message = clientSocket.recv(BYTE_SIZE).decode(ENCODER)
+
+            #check for the name flag
+            if message == "NAME":
+                name = input("What is your name? ")
+                clientSocket.send(name.encode(ENCODER))
+            #else, print the message
+            else:
+                print(message)
+        except:
+            #an error occurred, close client connection
+            print("Exception occurred.")
+            clientSocket.close
+            connected = False
+
+#start client 
+receiveMessage()
