@@ -35,4 +35,22 @@ def receiveMessage(socket):
 #function: connectClient
 #purpose: connect an incoming client to the server
 def connectClient():
-    pass
+    connected = True    #boolean flag to determine whether to continue listening for clients
+
+    while connected:
+        #accept incoming client connection and print address of client
+        clientSocket, clientAddress = serverSocket.accept()
+        print(f"Connected with {clientAddress}.")
+
+        #send a name flag to prompt the connected client for their name
+        clientSocket.send("NAME".encode(ENCODER))
+        clientName = clientSocket.recv(BYTE_SIZE).decode(ENCODER)
+
+        #append new client socket and client name to their appropriate lists
+        clientSocketList.append(clientSocket)
+        clientNameList.append(clientName)
+
+        #send an update the server, individual client, and all clients regarding the new client connection
+        print(f"Name of the new client is: {clientName}\n")     #server
+        clientSocket.send(f"{clientName}, you have connected to the server.".encode(ENCODER))   #individual client
+        broadcastMessage(f"{clientName} has joined the chat.".encode(ENCODER))  #all clients
