@@ -17,7 +17,10 @@ clientSocket.connect((DEST_IP, DEST_PORT))
 #function: sendMessage
 #purpose: send a message to the server which will be broadcasted
 def sendMessage():
-    pass
+    connected = True
+    while connected:
+        message = input("")
+        clientSocket.send(message.encode(ENCODER))
 
 #function receiveMessage
 #purpose: receive an incoming message via server
@@ -42,5 +45,10 @@ def receiveMessage():
             clientSocket.close
             connected = False
 
-#start client 
-receiveMessage()
+#Create threads to continuously send and receive messages
+sendThread = threading.Thread(target = sendMessage)
+receiveThread = threading.Thread(target = receiveMessage)
+
+#Start the client
+sendThread.start()
+receiveThread.start()
