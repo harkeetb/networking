@@ -24,7 +24,8 @@ clientNameList = []
 #params: message: message to be sent to clients connected to server
 #purpose: broadcast a message to connected clients
 def broadcastMessage(message):
-    pass
+    for clientSocket in clientSocketList:
+        clientSocket.send(message)         #should not need to encode here, since the message was already encoded prior to being passed as argument
 
 #function: receiveMessage
 #params: socket: incoming message from a client
