@@ -29,8 +29,33 @@ def broadcastMessage(message):
 #function: receiveMessage
 #params: socket: incoming message from a client
 #purpose: receive an incoming message from SPECIFIC client and forward message to be broadcast
-def receiveMessage(socket):
-    pass
+def receiveMessage(clientSocket):
+    connected = True
+    while connected:
+        try:
+            #Retrieve name of client socket from name list
+            index = clientSocketList.index(clientSocket)
+            name = clientNameList[index]
+
+            #Receive message from the client
+            message = clientSocket.recv(BYTE_SIZE).decode(ENCODER)
+            message =f"{name}: {message}".encode(ENCODER)
+            broadcastMessage(message)
+        except:
+            #Find the index of client socket in the lists
+            index = clientSocketList.index(clientSocket)
+            name = clientNameList[index]
+
+            #Remove the client socket and name from lists
+            clientSocketList.remove(clientSocket)
+            clientNameList.remove(name)
+
+            #Close client socket
+            clientSocket.close()
+            
+            #Broadcast the client has been removed from the chat
+            broadcastMessage(f"{name} has left the chat.".encode(ENCODER))
+            connected = False
 
 #function: connectClient
 #purpose: connect an incoming client to the server
@@ -54,3 +79,11 @@ def connectClient():
         print(f"Name of the new client is: {clientName}\n")     #server
         clientSocket.send(f"{clientName}, you have connected to the server.".encode(ENCODER))   #individual client
         broadcastMessage(f"{clientName} has joined the chat.".encode(ENCODER))  #all clients
+
+        #Since a new client has connected, start a thread
+        receiveThread = threading.Thread(target = receiveMessage, args=(clientSocket,))
+        receiveThread.start()
+
+#Start server
+print("Server is listening for incoming client connections")
+connectClient()
