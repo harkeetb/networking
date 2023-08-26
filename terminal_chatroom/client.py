@@ -46,9 +46,9 @@ def receiveMessage():
             connected = False
 
 #Create threads to continuously send and receive messages
-sendThread = threading.Thread(target = sendMessage)
 receiveThread = threading.Thread(target = receiveMessage)
+sendThread = threading.Thread(target = sendMessage)
 
 #Start the client
-sendThread.start()
 receiveThread.start()
+sendThread.start()
