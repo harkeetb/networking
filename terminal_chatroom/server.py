@@ -40,7 +40,7 @@ def receiveMessage(clientSocket):
 
             #Receive message from the client
             message = clientSocket.recv(BYTE_SIZE).decode(ENCODER)
-            message =f"{name}: {message}".encode(ENCODER)
+            message =f"\033[1;92m\t{name}: {message}\033[0m".encode(ENCODER)
             broadcastMessage(message)
         except:
             #Find the index of client socket in the lists
@@ -55,7 +55,7 @@ def receiveMessage(clientSocket):
             clientSocket.close()
             
             #Broadcast the client has been removed from the chat
-            broadcastMessage(f"{name} has left the chat.".encode(ENCODER))
+            broadcastMessage(f"\033[5;91m\t{name} has left the chat.\033[0m".encode(ENCODER))
             connected = False
 
 #function: connectClient
@@ -66,7 +66,7 @@ def connectClient():
     while connected:
         #accept incoming client connection and print address of client
         clientSocket, clientAddress = serverSocket.accept()
-        print(f"Connected with {clientAddress}.")
+        print(f"Connected with {clientAddress}...")
 
         #send a name flag to prompt the connected client for their name
         clientSocket.send("NAME".encode(ENCODER))
