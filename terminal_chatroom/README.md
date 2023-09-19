@@ -4,8 +4,8 @@ Running the terminal chat room:
 
     1. Start the server which hosts clients: 
 
-        ``python3 server.py``
+        `python3 server.py`
 
     2. To add a client to the chat:
         
-        ``python3 client.py``
+        `python3 client.py`
