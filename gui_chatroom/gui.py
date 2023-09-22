@@ -61,6 +61,3 @@ sbar.config(command=listbox.yview)
 
 listbox.grid(row=0,column=0)
 sbar.grid(row=0,column=1, sticky="NS")
-
-#root window main loop
-root.mainloop()
