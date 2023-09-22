@@ -32,8 +32,8 @@ def send():
     message_entry.delete(0,END)
 
 #define widgets
-message_entry = tkinter.Entry(input_frame, text="Enter message", width=20)
-send_button = tkinter.Button(input_frame, text="Send", command=send)                      
+message_entry = tkinter.Entry(input_frame, text="Enter message", width=20, font=("Helvetica", 12))
+send_button = tkinter.Button(input_frame, text="Send", bg=output_color, command=send)                      
 message_entry.grid(row=0, column=0, padx=10, pady=10)                   
 send_button.grid(row=0, column=1, padx=10, pady=10, ipadx=10, ipady=5)
 
