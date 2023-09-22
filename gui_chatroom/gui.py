@@ -1,3 +1,6 @@
+#Harkeet Bal
+#Client Chatroom GUI
+ 
 import tkinter
 from tkinter import BOTH, END, DISABLED, VERTICAL
 
@@ -7,7 +10,7 @@ root.title("Chatroom")
 root.geometry('600x600')
 root.resizable(0,0)         #disable window resizing
 
-#define colours
+#define colors
 root_color = '#535657'
 input_color = '#4f646f'
 output_color = "#dee7e7"
@@ -55,11 +58,11 @@ send_button.grid(row=0, column=1, padx=5, pady=5)
 
 #output frame layout
 sbar = tkinter.Scrollbar(output_frame, orient=VERTICAL)
-listbox = tkinter.Listbox(output_frame, height=20, width=55, borderwidth=3, bg = black, fg = output_color, font = text_font, yscrollcommand=sbar.set)
+listbox = tkinter.Listbox(output_frame, height=22, width=60, borderwidth=3, bg = black, fg = output_color, font = text_font, yscrollcommand=sbar.set)
 sbar.config(command=listbox.yview)
 
 listbox.grid(row=0,column=0)
-sbar.grid(row=0,column=1)
+sbar.grid(row=0,column=1, sticky="NS")
 
 
 #define widgets 
