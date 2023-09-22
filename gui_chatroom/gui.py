@@ -18,33 +18,6 @@ root.config(bg=root_color)
 text_font = ("Helvetica", 14)
 black = "#000"
 
-#define functions:
-
-#function: connect
-#purpose: connect to a server at it's given IP/Port address
-def connect():
-    pass
-
-#function: verify
-#purpose: verify that the server connection is valid
-def verify():
-    pass
-
-#function: disconnect
-#purpose: disconnect from the chat server
-def disconnect():
-    pass
-
-#function: send
-#purpose send a message to the chat server
-def send():
-    pass
-
-#function: receive
-#purpose: send receive a message from the chat server
-def receive():
-    pass
-
 #define GUI layout:
 
 #define frames
