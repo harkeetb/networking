@@ -10,15 +10,40 @@ root.title("Chatroom")
 root.geometry('600x600')
 root.resizable(0,0)         #disable window resizing
 
-#define colors
+#define colors and font
 root_color = '#535657'
 input_color = '#4f646f'
 output_color = "#dee7e7"
 root.config(bg=root_color)
-
-#define font
 text_font = ("Helvetica", 14)
 black = "#000"
+
+#define functions:
+
+#function: connect
+#purpose: connect to a server at it's given IP/Port address
+def connect():
+    pass
+
+#function: verify
+#purpose: verify that the server connection is valid
+def verify():
+    pass
+
+#function: disconnect
+#purpose: disconnect from the chat server
+def disconnect():
+    pass
+
+#function: send
+#purpose send a message to the chat server
+def send():
+    pass
+
+#function: receive
+#purpose: send receive a message from the chat server
+def receive():
+    pass
 
 #define GUI layout:
 
@@ -66,17 +91,6 @@ sbar.grid(row=0,column=1, sticky="NS")
 
 
 #define widgets 
-
-
-#define functions:
-#send user's typed message to the output frame
-def send():
-    message_label = tkinter.Label(output_frame, text=message_entry.get(), fg=black, bg=output_color,font=text_font)
-    message_label.pack()
-
-    #clear entry field
-    message_entry.delete(0,END)
-
 
 #root window main loop
 root.mainloop()
