@@ -6,6 +6,10 @@ import socket
 import threading
 import tkinter
 
+#constants
+ENCODER = 'utf-8'
+BYTE_SIZE = '1024'
+
 #define functions:
 ##################
 
@@ -13,6 +17,9 @@ import tkinter
 #purpose: connect to a server at it's given IP/Port address
 def connect():
     global client_socket
+
+    #clear previous chats
+    listbox.delete(0,tkinter.END)
 
     #retrieve connection parameters
     name = name_entry.get()
@@ -34,23 +41,56 @@ def connect():
         listbox.insert(0, "Insufficient information, unable to connect.")
     
 #function: verify
-#purpose: verify that the server connection is valid
-def verify():
-    pass
+#purpose: ensure that the server connection is valid
+def verify(name):
+    global client_socket
+    
+    # The server will send a NAME flag if a valid connection is made
+    flag = client_socket.recv(1024).decode(ENCODER)
+
+    if flag == 'NAME':
+        # the connection was made, send client name and await verification
+        client_socket.send(name.encode(ENCODER))
+        message = client_socket.recv(BYTE_SIZE).decode(ENCODER)
+
+        if message:
+            # server sent a verification, so connection is valid
+            listbox.insert(0, message)
+            
+            # update entry states (for buttons)
+            connect_button.config(state=tkinter.DISABLED)
+            disconnect_button.config(state=tkinter.NORMAL)
+            send_button.config(state=tkinter.NORMAL)
+            name_entry.config(state=tkinter.DISABLED)
+            ip_entry.config(state=tkinter.DISABLED)
+            port_entry.config(state=tkinter.DISABLED)
+
+            # create a thread to continuously receive messages from server
+            receive_thread = threading.Thread(target=receive_message)
+            receive_thread.start()
+        else:
+            # no verification message was received
+            listbox.insert(tkinter.END, "Connection not verified")
+            client_socket.close()
+    else:
+        # no name flag was sent, connection was refused
+        listbox.insert(tkinter.END, "Connection refused")
+        client_socket.close()
+
 
 #function: disconnect
 #purpose: disconnect from the chat server
 def disconnect():
     pass
 
-#function: send
+#function: send_message
 #purpose send a message to the chat server
-def send():
+def send_message():
     pass
 
 #function: receive
 #purpose: send receive a message from the chat server
-def receive():
+def receive_message():
     pass
 
 #Tkinter GUI definition:
