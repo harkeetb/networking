@@ -70,18 +70,29 @@ def verify(name):
             receive_thread.start()
         else:
             # no verification message was received
-            listbox.insert(tkinter.END, "Connection not verified")
+            listbox.insert(0, "Connection not verified")
             client_socket.close()
     else:
         # no name flag was sent, connection was refused
-        listbox.insert(tkinter.END, "Connection refused")
+        listbox.insert(0, "Connection refused")
         client_socket.close()
 
 
 #function: disconnect
 #purpose: disconnect from the chat server
 def disconnect():
-    pass
+    global client_socket
+
+    # close the socket
+    client_socket.close()
+
+    # update entry states (for buttons)
+    connect_button.config(state=tkinter.NORMAL)
+    disconnect_button.config(state=tkinter.DISABLED)
+    send_button.config(state=tkinter.DISABLED)
+    name_entry.config(state=tkinter.NORMAL)
+    ip_entry.config(state=tkinter.NORMAL)
+    port_entry.config(state=tkinter.NORMAL)
 
 #function: send_message
 #purpose send a message to the chat server
@@ -128,7 +139,7 @@ ip_entry = tkinter.Entry(info_frame, borderwidth=3, font=text_font)
 port_label = tkinter.Label(info_frame, text="Port #:", font=text_font, fg=black, bg=input_color)
 port_entry = tkinter.Entry(info_frame, borderwidth=3, font=text_font, width=10)
 connect_button = tkinter.Button(info_frame, text="Connect", font=text_font, bg=input_color, borderwidth=0, width=10, command=connect)
-disconnect_button = tkinter.Button(info_frame, text="Disconnect", font=text_font, bg=input_color, borderwidth=0,width=10, state=tkinter.DISABLED)
+disconnect_button = tkinter.Button(info_frame, text="Disconnect", font=text_font, bg=input_color, borderwidth=0,width=10, state=tkinter.DISABLED, command=disconnect)
 
 name_label.grid(row=0, column=0, padx=2, pady=10)
 name_entry.grid(row=0, column=1, padx=2, pady=10)
