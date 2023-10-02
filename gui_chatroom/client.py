@@ -8,7 +8,7 @@ import tkinter
 
 #constants
 ENCODER = 'utf-8'
-BYTE_SIZE = '1024'
+BYTE_SIZE = 1024
 
 #define functions:
 ##################
@@ -97,12 +97,31 @@ def disconnect():
 #function: send_message
 #purpose send a message to the chat server
 def send_message():
-    pass
+    global client_socket
+
+    # send the message to server
+    message = input_entry.get()
+    client_socket.send(message.encode(ENCODER))
+
+    # clear input entry
+    input_entry.delete(0, tkinter.END)
 
 #function: receive
 #purpose: send receive a message from the chat server
 def receive_message():
-    pass
+    global client_socket
+    connected = True
+
+    while connected:
+        try:
+            # receive an incoming message from the server
+            message = client_socket.recv(BYTE_SIZE).decode(ENCODER)
+            listbox.insert(0,message)
+        except:
+            # an error occurred, so disconnect from server
+            listbox.insert(0, "Closing the connection")
+            disconnect()
+            connected = False
 
 #Tkinter GUI definition:
 ########################
@@ -152,7 +171,7 @@ disconnect_button.grid(row=1, column=3, padx=4, pady=5)
 
 #input frame layout
 input_entry = tkinter.Entry(input_frame, width=45, borderwidth=3, font=text_font)
-send_button = tkinter.Button(input_frame, text="Send", borderwidth=5, width=10, font=text_font, bg=input_color, state = tkinter.DISABLED)
+send_button = tkinter.Button(input_frame, text="Send", borderwidth=5, width=10, font=text_font, bg=input_color, state = tkinter.DISABLED, command=send_message)
 
 input_entry.grid(row=0, column=0, padx=5, pady=5)
 send_button.grid(row=0, column=1, padx=5, pady=5)
