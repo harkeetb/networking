@@ -12,79 +12,79 @@ ENCODER = 'utf-8'
 BYTE_SIZE = 1024
 
 #Initialize server socket object using TCP, bind to host addresses, and listen for connections
-serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serverSocket.bind((HOST_IP, HOST_PORT))
-serverSocket.listen()
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((HOST_IP, HOST_PORT))
+server_socket.listen()
 
 #Initialize two lists to store client sockets, and the names
-clientSocketList = []
-clientNameList = []
+client_socket_list = []
+client_name_list = []
 
-#function: broadcastMessage
+#function: broadcast_message
 #params: message: message to be sent to clients connected to server
 #purpose: broadcast a message to connected clients
-def broadcastMessage(message):
-    for clientSocket in clientSocketList:
-        clientSocket.send(message)         #should not need to encode here, since the message was already encoded prior to being passed as argument
+def broadcast_message(message):
+    for client_socket in client_socket_list:
+        client_socket.send(message)         #should not need to encode here, since the message was already encoded prior to being passed as argument
 
-#function: receiveMessage
+#function: receive_message
 #params: socket: incoming message from a client
 #purpose: receive an incoming message from SPECIFIC client and forward message to be broadcast
-def receiveMessage(clientSocket):
+def receive_message(client_socket):
     connected = True
     while connected:
         try:
             #Retrieve name of client socket from name list
-            index = clientSocketList.index(clientSocket)
-            name = clientNameList[index]
+            index = client_socket_list.index(client_socket)
+            name = client_name_list[index]
 
             #Receive message from the client
-            message = clientSocket.recv(BYTE_SIZE).decode(ENCODER)
-            message =f"\033[1;92m\t{name}: {message}\033[0m".encode(ENCODER)
-            broadcastMessage(message)
+            message = client_socket.recv(BYTE_SIZE).decode(ENCODER)
+            message =f"{name}: {message}".encode(ENCODER)
+            broadcast_message(message)
         except:
             #Find the index of client socket in the lists
-            index = clientSocketList.index(clientSocket)
-            name = clientNameList[index]
+            index = client_socket_list.index(client_socket)
+            name = client_name_list[index]
 
             #Remove the client socket and name from lists
-            clientSocketList.remove(clientSocket)
-            clientNameList.remove(name)
+            client_socket_list.remove(client_socket)
+            client_name_list.remove(name)
 
             #Close client socket
-            clientSocket.close()
+            client_socket.close()
             
             #Broadcast the client has been removed from the chat
-            broadcastMessage(f"\033[5;91m\t{name} has left the chat.\033[0m".encode(ENCODER))
+            broadcast_message(f"{name} has left the chat.".encode(ENCODER))
             connected = False
 
-#function: connectClient
+#function: connect_client
 #purpose: connect an incoming client to the server
-def connectClient():
+def connect_client():
     connected = True    #boolean flag to determine whether to continue listening for clients
 
     while connected:
         #accept incoming client connection and print address of client
-        clientSocket, clientAddress = serverSocket.accept()
+        client_socket, clientAddress = server_socket.accept()
         print(f"Connected with {clientAddress}...")
 
         #send a name flag to prompt the connected client for their name
-        clientSocket.send("NAME".encode(ENCODER))
-        clientName = clientSocket.recv(BYTE_SIZE).decode(ENCODER)
+        client_socket.send("NAME".encode(ENCODER))
+        client_name = client_socket.recv(BYTE_SIZE).decode(ENCODER)
 
         #append new client socket and client name to their appropriate lists
-        clientSocketList.append(clientSocket)
-        clientNameList.append(clientName)
+        client_socket_list.append(client_socket)
+        client_name_list.append(client_name)
 
         #send an update the server, individual client, and all clients regarding the new client connection
-        print(f"Name of the new client is: {clientName}\n")     #server
-        clientSocket.send(f"{clientName}, you have connected to the server.".encode(ENCODER))   #individual client
-        broadcastMessage(f"{clientName} has joined the chat.".encode(ENCODER))  #all clients
+        print(f"Name of the new client is: {client_name}\n")     #server
+        client_socket.send(f"{client_name}, you have connected to the server.".encode(ENCODER))   #individual client
+        broadcast_message(f"{client_name} has joined the chat.".encode(ENCODER))  #all clients
 
         #Since a new client has connected, start a thread
-        receiveThread = threading.Thread(target = receiveMessage, args=(clientSocket,))
-        receiveThread.start()
+        receive_thread = threading.Thread(target = receive_message, args=(client_socket,))
+        receive_thread.start()
 
 #Start server
-print("Server is listening for incoming client connections")
-connectClient()
+print(f"Server is listening for incoming client connections at {HOST_IP}:{HOST_PORT}")
+connect_client()
