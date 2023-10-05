@@ -65,8 +65,8 @@ def connect_client():
 
     while connected:
         #accept incoming client connection and print address of client
-        client_socket, clientAddress = server_socket.accept()
-        print(f"Connected with {clientAddress}...")
+        client_socket, client_address = server_socket.accept()
+        print(f"Connected with {client_address}...")
 
         #send a name flag to prompt the connected client for their name
         client_socket.send("NAME".encode(ENCODER))
